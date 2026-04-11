@@ -10,18 +10,11 @@ exports.handler = async function(event) {
     return { statusCode: 200, headers, body: '' };
   }
 
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
-  }
-
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    return { statusCode: 500, headers, body: JSON.stringify({ error: 'API key not configured' }) };
-  }
 
   try {
     const body = JSON.parse(event.body);
-    const messages = body.messages || [{ role: 'user', content: body.prompt || '' }];
+    const messages = body.messages || [];
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -38,10 +31,18 @@ exports.handler = async function(event) {
       }),
     });
 
-    const data = await response.json();
-    return { statusCode: 200, headers, body: JSON.stringify(data) };
+    const text = await response.text();
+    console.log('Anthropic status:', response.status);
+    console.log('Anthropic response:', text);
+
+    return { 
+      statusCode: 200, 
+      headers, 
+      body: text
+    };
 
   } catch (err) {
+    console.log('Error:', err.message);
     return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
   }
 };
