@@ -667,8 +667,8 @@ const isSupabaseOn = () => !SUPABASE_URL.includes('YOUR_PROJECT_ID');
 const isAdzunaOn   = () => !ADZUNA_APP_ID.includes('YOUR_ADZUNA');
 
 // ── CONSTANTS ────────────────────────────────────────
-const SKILLS = ['Writing','Social Media','Admin','Coaching','Consulting','Marketing','Research','Design','Tech','Operations','Branding','Email','Content','Audio'];
-const TYPES  = ['All','Writing','Admin','Consulting','Marketing','Coaching','Content','Research'];
+const SKILLS = ['Writing','Social Media','Admin','Coaching','Consulting','Marketing','Research','Design','Tech','Operations','Branding','Email','Content','Audio','HR','Learning & Development','Leadership'];
+const TYPES  = ['All','Writing','Admin','Consulting','Marketing','Coaching','Content','Research','HR','L&D','Leadership'];
 const SOURCES = {
   curated:   { label:'Confident Curated', color:'#00e5a0', icon:'✦' },
   adzuna:    { label:'Job Board',         color:'#f5c842', icon:'◎' },
@@ -1114,8 +1114,13 @@ async function fetchRSS() {
       { url:'https://remoteok.com/remote-jobs.rss', name:'RemoteOK' },
       { url:'https://weworkremotely.com/categories/remote-jobs.rss', name:'We Work Remotely' },
       { url:'https://remotive.com/jobs/rss', name:'Remotive' },
-      { url:'https://workew.com/feed/', name:'Workew' },
+      { url:'https://www.freelancewritinggigs.com/feed/', name:'Freelance Writing Gigs' },
       { url:'https://problogger.com/jobs/feed/', name:'ProBlogger Jobs' },
+      { url:'https://jobicy.com/feed/job_feed&job_categories=hr&job_types=freelance,contract,part-time', name:'Jobicy HR' },
+      { url:'https://jobicy.com/feed/job_feed&job_categories=management&job_types=freelance,contract,part-time', name:'Jobicy Leadership' },
+      { url:'https://jobicy.com/feed/job_feed&job_categories=education&job_types=freelance,contract,part-time', name:'Jobicy L&D' },
+      { url:'https://jobicy.com/feed/job_feed&job_categories=marketing&job_types=freelance,contract,part-time', name:'Jobicy Marketing' },
+      { url:'https://jobicy.com/feed/job_feed&job_categories=copywriting&job_types=freelance,contract,part-time', name:'Jobicy Writing' },
     ];
     const results = await Promise.all(feeds.map(f =>
       fetch(proxy + encodeURIComponent(f.url))
@@ -1138,11 +1143,16 @@ async function fetchRSS() {
 
 function guessType(t='') {
   t=t.toLowerCase();
-  if(/writ|copy|content|editor/.test(t)) return'Writing';
-  if(/social|instagram|tiktok/.test(t))  return'Marketing';
-  if(/coach|mentor/.test(t))             return'Coaching';
-  if(/consult|strateg|ops/.test(t))      return'Consulting';
-  if(/admin|assist/.test(t))             return'Admin';
+  if(/writ|copy|content|editor|blog/.test(t))           return'Writing';
+  if(/social|instagram|tiktok|facebook/.test(t))        return'Marketing';
+  if(/coach|mentor|facilitat/.test(t))                  return'Coaching';
+  if(/consult|strateg|ops|operat/.test(t))              return'Consulting';
+  if(/admin|assist|virtual|execut/.test(t))             return'Admin';
+  if(/hr |human res|recruit|talent|people ops/.test(t)) return'HR';
+  if(/learn|train|l&d|development|instructi/.test(t))   return'L&D';
+  if(/leader|manag|direct|vp |chief/.test(t))           return'Leadership';
+  if(/market|brand|seo|email|campaign/.test(t))         return'Marketing';
+  if(/research|analyt|insight/.test(t))                 return'Research';
   return'Content';
 }
 function extractTags(text='') {
