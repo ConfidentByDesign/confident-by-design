@@ -724,8 +724,8 @@ function startMatcher() {
 }
 
 async function loadOpportunities() {
-  const [db, api] = await Promise.all([fetchSupabase(), fetchAdzuna()]);
-  const merged = [...(db.length ? db : DEMO), ...api];
+  const [db, api, rss] = await Promise.all([fetchSupabase(), fetchAdzuna(), fetchRSS()]);
+  const merged = [...(db.length ? db : DEMO), ...api, ...rss];
   const map = new Map();
   merged.forEach(o => map.set(o.title+o.company, o));
   state.opportunities = map.size ? [...map.values()] : DEMO;
@@ -1105,6 +1105,35 @@ async function fetchAdzuna() {
       description:(j.description||'').slice(0,200)+'…',source:'adzuna',url:j.redirect_url,
     })));
   } catch(e){return[];}
+}
+
+async function fetchRSS() {
+  try {
+    const proxy = 'https://api.rss2json.com/v1/api.json?rss_url=';
+    const feeds = [
+      { url:'https://remoteok.com/remote-jobs.rss', name:'RemoteOK' },
+      { url:'https://weworkremotely.com/categories/remote-jobs.rss', name:'We Work Remotely' },
+      { url:'https://remotive.com/jobs/rss', name:'Remotive' },
+      { url:'https://workew.com/feed/', name:'Workew' },
+      { url:'https://problogger.com/jobs/feed/', name:'ProBlogger Jobs' },
+    ];
+    const results = await Promise.all(feeds.map(f =>
+      fetch(proxy + encodeURIComponent(f.url))
+        .then(r => r.json()).catch(() => ({ items: [] }))
+    ));
+    return results.flatMap((d, i) => (d.items || []).slice(0, 4).map(item => ({
+      id: 'rss_' + Math.random().toString(36).slice(2),
+      title: item.title || 'Remote Role',
+      company: item.author || feeds[i].name,
+      type: guessType(item.title || ''),
+      pay: 'See listing',
+      commitment: 'Remote',
+      tags: extractTags((item.title || '') + ' ' + (item.description || '')),
+      description: (item.description || '').replace(/<[^>]+>/g, '').slice(0, 200) + '…',
+      source: 'rss',
+      url: item.link || '',
+    })));
+  } catch(e){ return []; }
 }
 
 function guessType(t='') {
