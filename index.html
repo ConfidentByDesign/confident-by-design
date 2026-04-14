@@ -678,11 +678,11 @@ const SOURCES = {
 const DEMO = [
   { id:'d1', title:'Content Strategist', company:'Bloom Wellness Co.', type:'Writing', pay:'$55–75/hr', commitment:'Part-time', tags:['Writing','Health','Remote'], description:'Lead content strategy for a growing wellness brand. Own the editorial calendar, write long-form pieces, and coach contributors.', source:'curated' },
   { id:'d2', title:'Executive Virtual Assistant', company:'TechFounder Group', type:'Admin', pay:'$30–45/hr', commitment:'Flexible', tags:['Admin','Tech','Remote'], description:'Support a fast-moving tech founder with calendar, inbox, research, and project coordination.', source:'curated' },
-  { id:'d3', title:'Brand Strategist', company:'Nova Creative Studio', type:'Consulting', pay:'$80–110/hr', commitment:'Project-based', tags:['Consulting','Branding','Creative'], description:'Define positioning, messaging, and visual identity for emerging brands.', source:'community' },
+  { id:'d3', title:'Brand Strategist', company:'Nova Creative Studio', type:'Consulting', pay:'$80–110/hr', commitment:'Project-based', tags:['Consulting','Branding','Creative'], description:'Define positioning, messaging, and visual identity for emerging brands.', source:'curated' },
   { id:'d4', title:'Social Media Manager', company:'The Style Collective', type:'Marketing', pay:'$40–55/hr', commitment:'Part-time', tags:['Social Media','Fashion','Remote'], description:'Own Instagram and TikTok for a fashion editorial brand — strategy, content, and community.', source:'rss' },
   { id:'d5', title:'Operations Consultant', company:'Luminary Ventures', type:'Consulting', pay:'$90–130/hr', commitment:'Contract', tags:['Consulting','Operations','Leadership'], description:'Audit and rebuild internal ops for a Series A startup. Define processes, implement tools, train the team.', source:'curated' },
-  { id:'d6', title:'Life & Career Coach', company:'Aligned Living Co.', type:'Coaching', pay:'$100–150/hr', commitment:'Flexible', tags:['Coaching','Personal Dev','Remote'], description:'Serve a roster of women clients navigating career pivots. Zoom sessions plus async support.', source:'community' },
-  { id:'d7', title:'Email Copywriter', company:'Firebrand Digital', type:'Writing', pay:'$50–70/hr', commitment:'Project-based', tags:['Writing','Sales','Email'], description:'Write high-converting email sequences for DTC brands from brief to send.', source:'adzuna' },
+  { id:'d6', title:'Life & Career Coach', company:'Aligned Living Co.', type:'Coaching', pay:'$100–150/hr', commitment:'Flexible', tags:['Coaching','Personal Dev','Remote'], description:'Serve a roster of women clients navigating career pivots. Zoom sessions plus async support.', source:'curated' },
+  { id:'d7', title:'Email Copywriter', company:'Firebrand Digital', type:'Writing', pay:'$50–70/hr', commitment:'Project-based', tags:['Writing','Sales','Email'], description:'Write high-converting email sequences for DTC brands from brief to send.', source:'curated' },
   { id:'d8', title:'Podcast Producer', company:'Amplify Media Group', type:'Content', pay:'$45–65/hr', commitment:'Part-time', tags:['Audio','Content','Creative'], description:'Produce a weekly business podcast — editing, show notes, guest coordination, distribution.', source:'rss' },
 ];
 
@@ -1116,11 +1116,11 @@ async function fetchRSS() {
       { url:'https://remotive.com/jobs/rss', name:'Remotive' },
       { url:'https://www.freelancewritinggigs.com/feed/', name:'Freelance Writing Gigs' },
       { url:'https://problogger.com/jobs/feed/', name:'ProBlogger Jobs' },
-      { url:'https://jobicy.com/feed/job_feed&job_categories=hr&job_types=freelance,contract,part-time', name:'Jobicy HR' },
-      { url:'https://jobicy.com/feed/job_feed&job_categories=management&job_types=freelance,contract,part-time', name:'Jobicy Leadership' },
-      { url:'https://jobicy.com/feed/job_feed&job_categories=education&job_types=freelance,contract,part-time', name:'Jobicy L&D' },
-      { url:'https://jobicy.com/feed/job_feed&job_categories=marketing&job_types=freelance,contract,part-time', name:'Jobicy Marketing' },
-      { url:'https://jobicy.com/feed/job_feed&job_categories=copywriting&job_types=freelance,contract,part-time', name:'Jobicy Writing' },
+      { url:'https://jobicy.com/feed/job_feed?job_categories=hr&job_types=freelance,contract,part-time', name:'Jobicy HR' },
+      { url:'https://jobicy.com/feed/job_feed?job_categories=management&job_types=freelance,contract,part-time', name:'Jobicy Leadership' },
+      { url:'https://jobicy.com/feed/job_feed?job_categories=education&job_types=freelance,contract,part-time', name:'Jobicy L&D' },
+      { url:'https://jobicy.com/feed/job_feed?job_categories=marketing&job_types=freelance,contract,part-time', name:'Jobicy Marketing' },
+      { url:'https://jobicy.com/feed/job_feed?job_categories=copywriting&job_types=freelance,contract,part-time', name:'Jobicy Writing' },
     ];
     const results = await Promise.all(feeds.map(f =>
       fetch(proxy + encodeURIComponent(f.url))
