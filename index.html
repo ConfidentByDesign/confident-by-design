@@ -629,7 +629,15 @@
           <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--subtle);margin-bottom:7px;">Role Description</div>
           <p id="opp-desc-text" style="color:#908880;font-size:13px;line-height:1.8;margin:0;"></p>
         </div>
-        <a id="opp-link" href="#" target="_blank" rel="noopener" style="color:var(--teal);font-size:12px;display:none;">View original listing ↗</a>
+        <div id="opp-apply-row" style="display:none;margin-top:8px;">
+          <a id="opp-link" href="#" target="_blank" rel="noopener"
+            style="display:inline-block;background:linear-gradient(135deg,#00e5a0,#00c987);color:#0a0a0a;font-weight:700;font-size:14px;padding:12px 28px;border-radius:11px;text-decoration:none;transition:transform .2s;"
+            onmouseover="this.style.transform='translateY(-1px)'"
+            onmouseout="this.style.transform=''">
+            Apply Now →
+          </a>
+          <span style="color:var(--subtle);font-size:12px;margin-left:14px;">Opens original listing in a new tab</span>
+        </div>
       </div>
       <!-- Negotiate -->
       <div id="tab-content-neg" class="flex-col section-hidden">
@@ -725,10 +733,13 @@ function startMatcher() {
 
 async function loadOpportunities() {
   const [db, api, rss] = await Promise.all([fetchSupabase(), fetchAdzuna(), fetchRSS()]);
-  const merged = [...(db.length ? db : DEMO), ...api, ...rss];
+  // Only use real sources — DEMO is fallback only if everything fails
+  const realListings = [...db, ...api, ...rss];
   const map = new Map();
-  merged.forEach(o => map.set(o.title+o.company, o));
-  state.opportunities = map.size ? [...map.values()] : DEMO;
+  realListings.forEach(o => map.set(o.title+o.company, o));
+  const deduped = [...map.values()];
+  // Only fall back to DEMO if no real listings loaded at all
+  state.opportunities = deduped.length > 0 ? deduped : DEMO;
   if (document.getElementById('view-results').classList.contains('section-hidden') === false) {
     renderResults();
   }
@@ -952,7 +963,7 @@ function renderResults() {
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;">
         <span style="color:var(--teal);font-weight:700;font-size:13px;">${opp.pay}</span>
-        <span style="color:var(--subtle);font-size:11px;">${opp.commitment} · Tap to explore →</span>
+        <span style="color:var(--subtle);font-size:11px;">${opp.commitment} · Tap to view & apply →</span>
       </div>`;
     card.onclick=()=>openModal(opp);
     list.appendChild(card);
@@ -971,7 +982,13 @@ function openModal(opp) {
   const descBox=document.getElementById('opp-desc-box');
   if (opp.description) { descBox.style.display='block'; document.getElementById('opp-desc-text').textContent=opp.description; } else { descBox.style.display='none'; }
   const link=document.getElementById('opp-link');
-  if (opp.url) { link.href=opp.url; link.style.display='block'; } else { link.style.display='none'; }
+  const applyRow=document.getElementById('opp-apply-row');
+  if (opp.url) {
+    link.href=opp.url;
+    applyRow.style.display='block';
+  } else {
+    applyRow.style.display='none';
+  }
   setTab('fit');
   document.getElementById('modal-overlay').classList.remove('section-hidden');
   document.body.style.overflow='hidden';
